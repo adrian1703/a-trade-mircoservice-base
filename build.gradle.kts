@@ -29,6 +29,7 @@ dependencies {
 group = "adrian.kuhn"
 version = "0.0.1"
 
+
 java {
     sourceCompatibility = JavaVersion.VERSION_21
     targetCompatibility = JavaVersion.VERSION_21

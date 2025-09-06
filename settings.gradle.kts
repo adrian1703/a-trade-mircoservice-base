@@ -11,3 +11,7 @@ pluginManagement {
     }
 }
 rootProject.name = "a-trade-mircoservice-base"
+
+include("a-trade-microservice-runtime-api")
+
+project(":a-trade-microservice-runtime-api").name = "a-trade-microservice-runtime-api"
