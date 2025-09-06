@@ -14,6 +14,8 @@ val quarkusPlatformArtifactId: String by project
 val quarkusPlatformVersion: String by project
 
 dependencies {
+    implementation(project(":a-trade-microservice-runtime-api"))
+
     implementation(enforcedPlatform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}"))
     implementation("io.quarkus:quarkus-rest")
     implementation("io.quarkus:quarkus-kafka-client")
@@ -28,6 +30,11 @@ dependencies {
 
 group = "adrian.kuhn"
 version = "0.0.1"
+
+subprojects {
+    group = "adrian.kuhn"
+    version = "0.0.1"
+}
 
 
 java {
