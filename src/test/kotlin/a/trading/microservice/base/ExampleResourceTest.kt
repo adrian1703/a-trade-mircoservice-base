@@ -1,4 +1,4 @@
-package a.trading
+package a.trading.microservice.base
 
 import io.quarkus.test.junit.QuarkusTest
 import io.restassured.RestAssured.given

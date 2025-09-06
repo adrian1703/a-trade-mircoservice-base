@@ -26,8 +26,8 @@ dependencies {
     testImplementation("io.rest-assured:rest-assured")
 }
 
-group = "a.trading"
-version = "1.0-SNAPSHOT"
+group = "adrian.kuhn"
+version = "0.0.1"
 
 java {
     sourceCompatibility = JavaVersion.VERSION_21

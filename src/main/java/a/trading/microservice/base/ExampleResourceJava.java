@@ -1,4 +1,4 @@
-package a.trading;
+package a.trading.microservice.base;
 
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;

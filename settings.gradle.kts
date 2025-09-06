@@ -10,4 +10,4 @@ pluginManagement {
         id(quarkusPluginId) version quarkusPluginVersion
     }
 }
-rootProject.name = "mircoservice-template"
+rootProject.name = "a-trade-mircoservice-base"
