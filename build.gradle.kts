@@ -15,6 +15,7 @@ val quarkusPlatformVersion: String by project
 
 dependencies {
     implementation(project(":a-trade-microservice-runtime-api"))
+    implementation("net.jcip:jcip-annotations:1.0")
 
     implementation(enforcedPlatform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}"))
     implementation("io.quarkus:quarkus-rest")
