@@ -1,29 +1,30 @@
 package a.trading.microservice.base
 
-import io.quarkus.test.junit.QuarkusTest
-import io.restassured.RestAssured.given
-import org.hamcrest.CoreMatchers.`is`
 import org.junit.jupiter.api.Test
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.test.web.reactive.server.WebTestClient
 
-@QuarkusTest
-class ExampleResourceTest {
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+class ExampleResourceTest(
+    @Autowired val webTestClient: WebTestClient
+) {
 
     @Test
     fun testHelloEndpoint() {
-        given()
-            .`when`().get("/hello")
-            .then()
-            .statusCode(200)
-            .body(`is`("Hello from Quarkus REST"))
+        webTestClient.get().uri("/hello")
+            .exchange()
+            .expectStatus().isOk
+            .expectBody(String::class.java)
+            .isEqualTo("hello")
     }
 
     @Test
     fun testHelloEndpoint2() {
-        given()
-            .`when`().get("/hello2")
-            .then()
-            .statusCode(200)
-            .body(`is`("Hello from Quarkus REST"))
+        webTestClient.get().uri("/hello2")
+            .exchange()
+            .expectStatus().isOk
+            .expectBody(String::class.java)
+            .isEqualTo("hello")
     }
-
 }

@@ -2,8 +2,6 @@ package a.trading.microservice.base.plugin
 
 import a.trade.microservice.runtime_api.RestApiPlugin
 import a.trading.microservice.base.LocalTestConfig
-import jakarta.enterprise.inject.spi.CDI
-import org.jboss.resteasy.reactive.server.core.startup.RuntimeResourceDeployment
 import org.junit.jupiter.api.Test
 import java.util.*
 
@@ -22,7 +20,5 @@ class RestApiPluginTest {
         assert(plugin.count() == 1) { "There should be exactly 1 RestApiPlugin in Jar" }
         //when
         val restResources = plugin.first().getRestResources()
-
-        val deployment = CDI.current().select(RuntimeResourceDeployment::class.java).get()
     }
 }

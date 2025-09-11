@@ -1,7 +1,8 @@
 plugins {
     kotlin("jvm") version "2.2.10"
     kotlin("plugin.allopen") version "2.2.10"
-    id("io.quarkus")
+    id("org.springframework.boot") version "3.3.1"
+    id("io.spring.dependency-management") version "1.1.4"
 }
 
 repositories {
@@ -9,25 +10,18 @@ repositories {
     mavenLocal()
 }
 
-val quarkusPlatformGroupId: String by project
-val quarkusPlatformArtifactId: String by project
-val quarkusPlatformVersion: String by project
 
 dependencies {
     implementation(project(":a-trade-microservice-runtime-api"))
     implementation("net.jcip:jcip-annotations:1.0")
 
-    implementation(enforcedPlatform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}"))
-    implementation("io.quarkus:quarkus-rest")
-    implementation("io.quarkus:quarkus-kafka-client")
-    implementation("io.quarkus:quarkus-kotlin")
-    implementation("io.quarkus:quarkus-avro")
-    implementation("io.quarkus:quarkus-kafka-streams")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-    implementation("io.quarkus:quarkus-arc")
-    testImplementation("io.quarkus:quarkus-junit5")
-    testImplementation("io.rest-assured:rest-assured")
+    implementation("org.springframework.boot:spring-boot-starter-webflux")
+    // Optionally, for dev tools or test support:
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("io.projectreactor:reactor-test")
 }
+
 
 group = "adrian.kuhn"
 version = "0.0.1"
@@ -37,26 +31,28 @@ subprojects {
     version = "0.0.1"
 }
 
+tasks.test {
+    useJUnitPlatform()
+}
 
 java {
     sourceCompatibility = JavaVersion.VERSION_21
     targetCompatibility = JavaVersion.VERSION_21
 }
 
-tasks.withType<Test> {
-    systemProperty("java.util.logging.manager", "org.jboss.logmanager.LogManager")
-    jvmArgs("--add-opens", "java.base/java.lang=ALL-UNNAMED")
-}
+//tasks.withType<Test> {
+//    systemProperty("java.util.logging.manager", "org.jboss.logmanager.LogManager")
+//    jvmArgs("--add-opens", "java.base/java.lang=ALL-UNNAMED")
+//}
 allOpen {
-    annotation("jakarta.ws.rs.Path")
-    annotation("jakarta.enterprise.context.ApplicationScoped")
-    annotation("jakarta.persistence.Entity")
-    annotation("io.quarkus.test.junit.QuarkusTest")
+    annotation("org.springframework.context.annotation.Bean")
+    annotation("org.springframework.context.annotation.Configuration")
 }
 
 kotlin {
     compilerOptions {
         jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_21
+        freeCompilerArgs.set(listOf("-Xannotation-default-target=param-property"))
         javaParameters = true
     }
 }
