@@ -1,7 +1,8 @@
 package a.trade.microservice.runtime_api;
 
-import java.util.List;
+import org.springframework.web.reactive.function.server.RouterFunction;
+import org.springframework.web.reactive.function.server.ServerResponse;
 
 public interface RestApiPlugin {
-    public List<Object> getRestResources();
+    RouterFunction<ServerResponse> getRouter(RuntimeApi runtimeApi);
 }

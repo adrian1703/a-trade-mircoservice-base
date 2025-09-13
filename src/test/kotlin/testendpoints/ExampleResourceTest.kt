@@ -36,4 +36,14 @@ class ExampleResourceTest(
             .expectBody(String::class.java)
             .isEqualTo("hello")
     }
+
+
+    @Test
+    fun testHelloEndpoint4() {
+        webTestClient.get().uri("/hello4")
+            .exchange()
+            .expectStatus().isOk
+            .expectBody(String::class.java)
+            .isEqualTo("hello")
+    }
 }

@@ -9,8 +9,14 @@ java {
 }
 
 repositories {
+    mavenCentral()
     mavenLocal()
 }
+
+dependencies {
+    compileOnly 'org.springframework:spring-webflux:6.1.14'
+}
+
 
 publishing {
     publications {
