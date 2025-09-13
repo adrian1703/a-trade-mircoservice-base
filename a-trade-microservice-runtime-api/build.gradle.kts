@@ -1,6 +1,6 @@
 plugins {
-    id 'java'
-    id 'maven-publish'
+    java
+    `maven-publish`
 }
 
 java {
@@ -14,14 +14,13 @@ repositories {
 }
 
 dependencies {
-    compileOnly 'org.springframework:spring-webflux:6.1.14'
+    compileOnly("org.springframework:spring-webflux:6.1.14")
 }
-
 
 publishing {
     publications {
-        maven(MavenPublication) {
-            from components.java
+        create<MavenPublication>("maven") {
+            from(components["java"])
         }
     }
 }
