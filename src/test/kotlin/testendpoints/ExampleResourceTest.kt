@@ -1,4 +1,4 @@
-package a.trading.microservice.base.testendpoints
+package testendpoints
 
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -22,6 +22,15 @@ class ExampleResourceTest(
     @Test
     fun testHelloEndpoint2() {
         webTestClient.get().uri("/hello2")
+            .exchange()
+            .expectStatus().isOk
+            .expectBody(String::class.java)
+            .isEqualTo("hello")
+    }
+
+    @Test
+    fun testHelloEndpoint3() {
+        webTestClient.get().uri("/hello3")
             .exchange()
             .expectStatus().isOk
             .expectBody(String::class.java)

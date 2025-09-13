@@ -1,4 +1,4 @@
-package a.trading.microservice.base;
+package general;
 
 import a.trade.microservice.runtime_api.test.TestInterface;
 import org.junit.jupiter.api.Test;
