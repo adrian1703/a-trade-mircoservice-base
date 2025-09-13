@@ -1,4 +1,4 @@
-package a.trading.microservice.base
+package a.trading.microservice.base.testendpoints
 
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping

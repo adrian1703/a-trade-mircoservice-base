@@ -1,4 +1,4 @@
-package a.trading.microservice.base
+package a.trading.microservice.base.testendpoints
 
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired

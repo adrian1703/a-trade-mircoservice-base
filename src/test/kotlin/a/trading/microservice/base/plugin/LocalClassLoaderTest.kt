@@ -1,7 +1,7 @@
 package a.trading.microservice.base.plugin
 
 import a.trade.microservice.runtime_api.test.TestInterface
-import a.trading.microservice.base.LocalTestConfig
+import a.trading.microservice.base.utils.LocalTestConfig
 import org.junit.jupiter.api.Test
 import java.util.*
 
