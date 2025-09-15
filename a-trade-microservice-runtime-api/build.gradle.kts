@@ -1,6 +1,7 @@
 plugins {
     java
     `maven-publish`
+    id("com.github.davidmc24.gradle.plugin.avro") version "1.9.1"
 }
 
 java {
@@ -14,8 +15,11 @@ repositories {
 }
 
 dependencies {
-    compileOnly("org.springframework:spring-webflux:6.1.14")
+    implementation("org.springframework:spring-webflux:6.1.14")
+    implementation("org.apache.avro:avro:1.11.4")
 }
+
+sourceSets["main"].java.srcDirs("src/main/avro")
 
 publishing {
     publications {

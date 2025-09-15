@@ -35,7 +35,6 @@ nb-configuration.xml
 # Local environment
 .env
 
-# Plugin directory
-/.quarkus/cli/plugins/
 # TLS Certificates
 .certs/
+/a-trade-microservice-runtime-api/src/main/avro/

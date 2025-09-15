@@ -6,6 +6,10 @@ export JAVA_HOME=/home/adrian/.jdks/openjdk-24.0.1
 PREVIOUS_DIR="$(pwd)"
 
 cd "$SCRIPT_DIR"
+mkdir -p a-trade-microservice-runtime-api/src/main/avro
+rm -rf a-trade-microservice-runtime-api/src/main/avro/*
+cp -r a-trade-shared-resources/*.avsc a-trade-microservice-runtime-api/src/main/avro
+
 ./gradlew ":a-trade-microservice-runtime-api:clean" &&
   ./gradlew ":a-trade-microservice-runtime-api:jar" &&
   ./gradlew ":a-trade-microservice-runtime-api:publishToMavenLocal"
