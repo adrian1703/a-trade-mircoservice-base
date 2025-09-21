@@ -15,6 +15,7 @@ dependencies {
     implementation(project(":a-trade-microservice-runtime-api"))
     implementation("net.jcip:jcip-annotations:1.0")
 
+    implementation("org.apache.kafka:kafka-clients:4.1.0")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("org.springframework.boot:spring-boot-starter-webflux")
     // Optionally, for dev tools or test support:
@@ -22,13 +23,23 @@ dependencies {
     testImplementation("io.projectreactor:reactor-test")
 }
 
-
 group = "adrian.kuhn"
 version = "0.0.1"
 
 subprojects {
     group = "adrian.kuhn"
     version = "0.0.1"
+}
+
+sourceSets {
+    test {
+        java {
+            srcDir("src/integrationTest/java")
+        }
+        kotlin {
+            srcDir("src/integrationTest/kotlin")
+        }
+    }
 }
 
 tasks.test {
