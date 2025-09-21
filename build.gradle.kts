@@ -18,6 +18,7 @@ dependencies {
     implementation("org.apache.kafka:kafka-clients:4.1.0")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("org.springframework.boot:spring-boot-starter-webflux")
+    implementation("org.apache.avro:avro:1.11.4")
     // Optionally, for dev tools or test support:
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("io.projectreactor:reactor-test")
@@ -31,20 +32,10 @@ subprojects {
     version = "0.0.1"
 }
 
-sourceSets {
-    test {
-        java {
-            srcDir("src/integrationTest/java")
-        }
-        kotlin {
-            srcDir("src/integrationTest/kotlin")
-        }
-    }
-}
-
 tasks.test {
     useJUnitPlatform()
     jvmArgs("-XX:+EnableDynamicAgentLoading")
+    exclude("integrationTest/*")
 }
 
 java {
