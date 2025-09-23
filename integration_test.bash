@@ -6,5 +6,9 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$SCRIPT_DIR/gradle.properties"
 
 docker build -f "$SCRIPT_DIR/dockerfiles/integration.Dockerfile" -t "$PROJECT_NAME-integration-test" "$SCRIPT_DIR"
-docker run -it --network trading_a-trade-data-network --name intTest localhost/a-trade-microservice-base-integration-test:latest -
-docker kill intTest
+docker rm -f intTest
+docker run -it \
+  --network trading_a-trade-data-network \
+  --name intTest \
+  localhost/a-trade-microservice-base-integration-test:latest
+docker rm -f intTest
