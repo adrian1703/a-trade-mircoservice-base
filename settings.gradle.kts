@@ -1,16 +1,12 @@
 pluginManagement {
-    val quarkusPluginVersion: String by settings
-    val quarkusPluginId: String by settings
     repositories {
         mavenCentral()
         gradlePluginPortal()
         mavenLocal()
     }
-    plugins {
-        id(quarkusPluginId) version quarkusPluginVersion
-    }
 }
-rootProject.name = "a-trade-mircoservice-base"
+val PROJECT_NAME: String by settings
+rootProject.name = PROJECT_NAME
 
 include("a-trade-microservice-runtime-api")
 

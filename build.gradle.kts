@@ -22,6 +22,9 @@ dependencies {
     // Optionally, for dev tools or test support:
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("io.projectreactor:reactor-test")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
+    testImplementation("org.testcontainers:testcontainers:1.21.3")
+    testImplementation("org.testcontainers:junit-jupiter:1.21.3")
 }
 
 group = "adrian.kuhn"
@@ -59,3 +62,23 @@ kotlin {
         javaParameters = true
     }
 }
+
+// =================================== Plugin Contender ===================================
+sourceSets {
+    create("integration")
+}
+
+sourceSets["integration"].compileClasspath += sourceSets["main"].output
+sourceSets["integration"].runtimeClasspath += sourceSets["main"].output
+
+configurations["integrationImplementation"].extendsFrom(configurations.implementation.get())
+configurations["integrationRuntimeOnly"].extendsFrom(configurations.runtimeOnly.get())
+
+tasks.register<JavaExec>("runIntegration") {
+    group = "application"
+    description = "Run a main from the integration source set"
+    classpath = sourceSets["integration"].runtimeClasspath
+    // Set your FQ main class here:
+    mainClass.set("integrationTest.a.trading.microservice.base.IntegrationTestRunnerKt")
+}
+// ========================================================================================
