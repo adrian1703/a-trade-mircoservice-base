@@ -12,7 +12,7 @@ class KafkaClientFactoryTest {
         val factory = KafkaClientFactory()
         val config = factory.getDefaultConfig()
         config[ProducerConfig.CLIENT_ID_CONFIG] = "test-producer"
-        config[ProducerConfig.BOOTSTRAP_SERVERS_CONFIG] = "localhost:9092"
+//        config[ProducerConfig.BOOTSTRAP_SERVERS_CONFIG] = "localhost:9092"
 
         val producer = factory.createProducer(config)
         producer.send(
