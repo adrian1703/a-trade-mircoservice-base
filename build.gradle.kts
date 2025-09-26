@@ -8,6 +8,9 @@ plugins {
 repositories {
     mavenCentral()
     mavenLocal()
+    maven("https://packages.confluent.io/maven/")
+
+
 }
 
 
@@ -18,7 +21,8 @@ dependencies {
     implementation("org.apache.kafka:kafka-clients:4.1.0")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("org.springframework.boot:spring-boot-starter-webflux")
-    implementation("org.apache.avro:avro:1.11.4")
+    implementation("org.apache.avro:avro:1.12.0")
+    implementation("io.confluent:kafka-avro-serializer:8.0.0")
     // Optionally, for dev tools or test support:
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("io.projectreactor:reactor-test")
