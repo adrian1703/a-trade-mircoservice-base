@@ -1,0 +1,9 @@
+{
+  "properties": [
+    {
+      "name": "plugin.dir",
+      "type": "java.lang.String",
+      "description": "Description for plugin.dir."
+    }
+  ]
+}

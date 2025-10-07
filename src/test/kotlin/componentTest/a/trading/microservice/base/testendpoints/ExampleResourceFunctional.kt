@@ -22,9 +22,8 @@ class ExampleResourceFunctional {
     }
 
     fun getRouter(): RouterFunction<ServerResponse> {
-        val resource = this
         val route = router {
-            GET("/hello3", accept(APPLICATION_JSON), resource::hello3)
+            GET("/hello3", accept(APPLICATION_JSON), ::hello3)
         }
         return route
     }

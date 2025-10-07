@@ -1,10 +1,29 @@
 package a.trading.microservice.base.plugin
 
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.stereotype.Component
 import java.io.File
 import java.net.URLClassLoader
 
-class LocalClassLoader {
+@Component
+class DirectoryClassLoader {
 
+    @Autowired
+    lateinit var classLoaderConfig: DirectoryClassLoaderConfig
+
+    /**
+     * Creates a list of [ClassLoader] instances, each corresponding to a JAR file
+     * present in the specified directory.
+     *
+     * <p>This method scans the directory located at the given path, identifies all JAR files,
+     * and creates class loaders for each JAR using [URLClassLoader].</p>
+     *
+     * @return A list of [ClassLoader] instances, each capable of loading classes from
+     *         a specific JAR file in the directory.
+     */
+    fun createClassLoaderForEachJarInDirectory(): List<ClassLoader> {
+        return createClassLoaderForEachJarInDirectory(classLoaderConfig.pluginDirectory)
+    }
 
     /**
      * Creates a list of [ClassLoader] instances, each corresponding to a JAR file
@@ -25,8 +44,8 @@ class LocalClassLoader {
         val directory = File(directoryPath)
         directory
             .listFiles()
-            .filter { file -> file.extension == "jar" }
-            .forEach { file ->
+            ?.filter { file -> file.extension == "jar" }
+            ?.forEach { file ->
                 val classLoader = URLClassLoader.newInstance(arrayOf(file.toURI().toURL()),
                                                              this.javaClass.classLoader)
                 result.add(classLoader)

@@ -12,9 +12,9 @@ class LocalClassLoaderTest {
     @Test
     fun `test loading of local jar test interface`() {
         // given
-        val localClassLoader = _root_ide_package_.a.trading.microservice.base.plugin.LocalClassLoader()
+        val directoryClassLoader = _root_ide_package_.a.trading.microservice.base.plugin.DirectoryClassLoader()
         // when
-        val classLoaders = localClassLoader.createClassLoaderForEachJarInDirectory(cf.pathToJarDirectory)
+        val classLoaders = directoryClassLoader.createClassLoaderForEachJarInDirectory(cf.pathToJarDirectory)
         // then
         assert(classLoaders.size == 1) { "There has should be exactly 1 Jar in dir" }
         // when
