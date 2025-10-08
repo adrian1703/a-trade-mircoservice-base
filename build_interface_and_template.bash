@@ -11,13 +11,13 @@ rm -rf a-trade-microservice-runtime-api/src/main/avro/*
 cp -r a-trade-shared-resources/*.avsc a-trade-microservice-runtime-api/src/main/avro
 
 ./gradlew ":a-trade-microservice-runtime-api:clean" &&
-  ./gradlew ":a-trade-microservice-runtime-api:jar" &&
+  ./gradlew ":a-trade-microservice-runtime-api:jar"  &&
   ./gradlew ":a-trade-microservice-runtime-api:publishToMavenLocal"
 
 cd a-trade-microservice-template
 ./gradlew ":clean" && ./gradlew ":jar"
 cd ..
-rm -r src/test/resources/*
+rm -r src/test/resources/*.jar
 cp -r a-trade-microservice-template/build/libs/* src/test/resources
 
 

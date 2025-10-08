@@ -25,6 +25,7 @@ class DirectoryClassLoaderComponentTest(
     @Test
     fun `classLoaderConfig should have a default value`() {
         assertNotNull(classLoaderConfig)
-        assert(classLoaderConfig.pluginDirectory == "./plugins")
+        assert(classLoaderConfig.pluginDirectory == "src/test/resources",
+               { "${classLoaderConfig.pluginDirectory} is wrong" })
     }
 }
