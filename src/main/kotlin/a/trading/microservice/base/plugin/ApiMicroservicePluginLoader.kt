@@ -11,6 +11,22 @@ import org.springframework.web.reactive.function.server.ServerResponse
 import org.springframework.web.reactive.function.server.router
 import java.util.*
 
+/**
+ * Loader for API microservice plugins implementing [RestApiPlugin].
+ * Only to be used on startup!
+ * <p>
+ * This class scans a predefined directory for plugin JAR files, dynamically loads them
+ * using [DirectoryClassLoader], and integrates their routing logic into the application.
+ * </p>
+ *
+ * <h2>Thread Safety</h2>
+ * This class is <strong>not thread-safe</strong>. Ensure usage in a controlled, single-threaded environment.
+ *
+ * @constructor Creates an instance of the plugin loader.
+ *
+ * @see [RestApiPlugin]
+ * @see [DirectoryClassLoader]
+ */
 @NotThreadSafe
 @Configuration
 class ApiMicroservicePluginLoader : InterfaceLoader<RestApiPlugin> {
