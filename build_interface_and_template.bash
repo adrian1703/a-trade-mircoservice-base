@@ -1,4 +1,9 @@
 #!/usr/bin/env bash
+# This Bash script automates the building and preparation
+# of Avro interface files and template jar files for the template base project.
+# It ensures that Avro schema files are correctly placed,
+# builds necessary Java/Kotlin components using Gradle, and copies
+# the resulting artifacts to the relevant resource directories for testing or packaging.
 set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
