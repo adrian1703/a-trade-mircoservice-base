@@ -13,7 +13,7 @@ import java.util.*
 
 @NotThreadSafe
 @Configuration
-class ApiMicroservicePluginLoader : PluginLoader {
+class ApiMicroservicePluginLoader : InterfaceLoader<RestApiPlugin> {
 
     @Autowired
     lateinit var classLoader: DirectoryClassLoader
@@ -21,7 +21,7 @@ class ApiMicroservicePluginLoader : PluginLoader {
     @Autowired
     lateinit var runtimeApi: RuntimeApi
 
-    override fun loadPlugins(): List<RestApiPlugin> {
+    override fun loadImplementations(): List<RestApiPlugin> {
         val plugins = mutableListOf<RestApiPlugin>()
         val classloaders = classLoader.createClassLoaderForEachJarInDirectory()
         classloaders.forEach { loader ->
@@ -32,7 +32,7 @@ class ApiMicroservicePluginLoader : PluginLoader {
     }
 
     fun getRouter(): RouterFunction<ServerResponse> {
-        val plugins = loadPlugins()
+        val plugins = loadImplementations()
         val routers = plugins.map { it.getRouter(runtimeApi) }
         val combinedRouter =
             routers
