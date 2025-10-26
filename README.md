@@ -24,7 +24,7 @@ Sets up and runs integration testing inside a dedicated Docker container.
 
 ## TODO Next
 
-1. get docker up and running - make test deploy
+1. ~~get docker up and running - make test deploy~~
 2. rebuild data publisher as microservice
     1. min agg
     2. day agg
