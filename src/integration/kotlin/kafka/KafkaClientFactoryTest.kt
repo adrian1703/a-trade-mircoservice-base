@@ -1,6 +1,6 @@
 package integrationTest.a.trading.microservice.base.kafka
 
-import a.trading.microservice.base.kafka.KafkaClientConfigs
+import a.trading.microservice.base.kafka.KafkaClientConfigsImpl
 import kafka_message.StockAggregate
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.clients.consumer.KafkaConsumer
@@ -17,7 +17,7 @@ class KafkaClientFactoryTest {
     }
 
     fun `Test publishing to live setup`() {
-        val configs = KafkaClientConfigs()
+        val configs = KafkaClientConfigsImpl()
         val config = configs.getStringProducerConfig()
         config[ProducerConfig.CLIENT_ID_CONFIG] = "test-producer"
         val producer = configs.createStringProducer(config)
@@ -28,7 +28,7 @@ class KafkaClientFactoryTest {
     }
 
     fun `Test publishing Stockaggregate to live setup`() {
-        val configs = KafkaClientConfigs()
+        val configs = KafkaClientConfigsImpl()
         val config = configs.getStringProducerConfig()
         config[ProducerConfig.CLIENT_ID_CONFIG] = "test-producer"
 
@@ -41,7 +41,7 @@ class KafkaClientFactoryTest {
     }
 
     fun `Test reading from Stockaggregate live setup`() {
-        val configs = KafkaClientConfigs()
+        val configs = KafkaClientConfigsImpl()
         val config = configs.getAvroConsumerConfig("test-${UUID.randomUUID()}")
 //        val config = configs.getStringConsumerConfig("test-${UUID.randomUUID()}")
         config[ConsumerConfig.AUTO_OFFSET_RESET_CONFIG] = "earliest"
