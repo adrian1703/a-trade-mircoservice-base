@@ -10,8 +10,9 @@ import org.apache.kafka.clients.producer.KafkaProducer
 import org.apache.kafka.clients.producer.ProducerConfig
 import org.apache.kafka.common.serialization.StringDeserializer
 import org.apache.kafka.common.serialization.StringSerializer
+import org.springframework.stereotype.Component
 
-
+@Component
 class KafkaClientConfigsImpl : KafkaConfigs {
 
     private val kafkaUrl = "kafka1:9092"
