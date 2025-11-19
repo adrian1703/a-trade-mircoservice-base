@@ -8,12 +8,12 @@ import unitTest.a.trading.microservice.base.plugin.RestApiPluginTest
 import unitTest.a.trading.microservice.base.utils.DummyRuntimeApi
 
 @Configuration
-class ExampleResourcePlugin {
+class ExampleResourcePlugin(private val api: DummyRuntimeApi = DummyRuntimeApi()) {
 
     @Bean
     fun servePlugin(): RouterFunction<ServerResponse> {
         val restApiPluginTest = RestApiPluginTest()
         val plugin = restApiPluginTest.getPlugin()
-        return plugin.getRouter(DummyRuntimeApi())
+        return plugin.getRouter(api)
     }
 }

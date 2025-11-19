@@ -2,6 +2,16 @@ package a.trade.microservice.runtime_api;
 
 import java.util.Map;
 
+
+/**
+ * Provides configuration mappings for Kafka producers and consumers, supporting both
+ * `String` and Avro serialization formats.
+ *
+ * <p>This interface offers methods to construct Kafka configuration properties
+ * tailored for specific use cases,
+ * including producers and consumers operating with simple `String` data or
+ * Avro-serialized messages.</p>
+ */
 public interface KafkaConfigs {
 
     /**
