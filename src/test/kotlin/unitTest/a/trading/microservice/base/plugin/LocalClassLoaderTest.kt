@@ -1,6 +1,7 @@
 package unitTest.a.trading.microservice.base.plugin
 
 import a.trade.microservice.runtime_api.test.TestInterface
+import a.trading.microservice.base.plugin.DirectoryClassLoader
 import org.junit.jupiter.api.Test
 import unitTest.a.trading.microservice.base.utils.LocalTestConfig
 import java.util.*
@@ -12,7 +13,7 @@ class LocalClassLoaderTest {
     @Test
     fun `test loading of local jar test interface`() {
         // given
-        val directoryClassLoader = _root_ide_package_.a.trading.microservice.base.plugin.DirectoryClassLoader()
+        val directoryClassLoader = DirectoryClassLoader()
         // when
         val classLoaders = directoryClassLoader.createClassLoaderForEachJarInDirectory(cf.pathToJarDirectory)
         // then

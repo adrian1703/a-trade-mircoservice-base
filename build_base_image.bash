@@ -24,6 +24,6 @@ docker build \
   --build-arg JAR_FILE="a-trade-microservice-base-0.0.1.jar" \
   -f ./dockerfiles/production.Dockerfile \
   -t "$PROJECT_NAME" .
-
+docker image prune -f
 echo -e "${GREEN}✔ Done! Returning to calling directory${RESET}"
 cd "$CURRENT_DIR"
