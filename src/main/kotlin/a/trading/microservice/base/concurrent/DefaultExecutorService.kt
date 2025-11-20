@@ -21,14 +21,18 @@ class DefaultExecutorService {
         return result
     }
 
-    private fun getComputeExecutor(): ThreadPoolExecutor {
+    private fun getComputeExecutor(): ExecutorService {
         val namedThreadFactory = createThreadFactoryFor(ExecutorContext.COMPUTE)
-        return ThreadPoolExecutor(1, 16, 60, TimeUnit.SECONDS, LinkedBlockingQueue(), namedThreadFactory)
+        return ThreadPoolExecutor(1,
+                                  Runtime.getRuntime().availableProcessors(),
+                                  60,
+                                  TimeUnit.SECONDS,
+                                  LinkedBlockingQueue(),
+                                  namedThreadFactory)
     }
 
-    private fun getIOExecutor(): ThreadPoolExecutor {
-        val namedThreadFactory = createThreadFactoryFor(ExecutorContext.IO)
-        return ThreadPoolExecutor(0, 100, 20, TimeUnit.SECONDS, LinkedBlockingQueue(), namedThreadFactory)
+    private fun getIOExecutor(): ExecutorService {
+        return Executors.newVirtualThreadPerTaskExecutor()
     }
 
     private fun createThreadFactoryFor(context: ExecutorContext): ThreadFactory {
