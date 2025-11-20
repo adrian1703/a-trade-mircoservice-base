@@ -3,7 +3,7 @@ package a.trading.microservice.base.plugin
 import a.trade.microservice.runtime_api.RestApiPlugin
 import a.trade.microservice.runtime_api.RuntimeApi
 import net.jcip.annotations.NotThreadSafe
-import org.springframework.beans.factory.annotation.Autowired
+import org.slf4j.LoggerFactory.getLogger
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.web.reactive.function.server.RouterFunction
@@ -29,17 +29,15 @@ import java.util.*
  */
 @NotThreadSafe
 @Configuration
-class ApiMicroservicePluginLoader : InterfaceLoader<RestApiPlugin> {
+class ApiMicroservicePluginLoader(val classLoader: DirectoryClassLoader, val runtimeApi: RuntimeApi) :
+    InterfaceLoader<RestApiPlugin> {
 
-    @Autowired
-    lateinit var classLoader: DirectoryClassLoader
-
-    @Autowired
-    lateinit var runtimeApi: RuntimeApi
+    val logger = getLogger(this::class.java)
 
     override fun loadImplementations(): List<RestApiPlugin> {
         val plugins = mutableListOf<RestApiPlugin>()
         val classloaders = classLoader.createClassLoaderForEachJarInDirectory()
+        logger.info("Loaded ${classloaders.size} classloaders")
         classloaders.forEach { loader ->
             val loadedPlugins = ServiceLoader.load(RestApiPlugin::class.java, loader)
             plugins.addAll(loadedPlugins)
@@ -49,7 +47,9 @@ class ApiMicroservicePluginLoader : InterfaceLoader<RestApiPlugin> {
 
     fun getRouter(): RouterFunction<ServerResponse> {
         val plugins = loadImplementations()
-        val routers = plugins.map { it.getRouter(runtimeApi) }
+        logger.info("Loaded ${plugins.size} plugins")
+        val routers = plugins.map { it.init(runtimeApi); it.getRouter() }
+        if (routers.isEmpty()) return router { GET("/ping") { ServerResponse.ok().build() } }
         val combinedRouter =
             routers
                 .reduce { acc: RouterFunction<ServerResponse>, router: RouterFunction<ServerResponse> ->

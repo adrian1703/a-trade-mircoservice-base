@@ -1,5 +1,6 @@
 package a.trading.microservice.base.plugin
 
+import org.slf4j.LoggerFactory.getLogger
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 import java.io.File
@@ -7,6 +8,7 @@ import java.net.URLClassLoader
 
 @Component
 class DirectoryClassLoader {
+    val logger = getLogger(this::class.java)
 
     @Autowired
     lateinit var classLoaderConfig: DirectoryClassLoaderConfig
@@ -46,6 +48,7 @@ class DirectoryClassLoader {
             .listFiles()
             ?.filter { file -> file.extension == "jar" }
             ?.forEach { file ->
+                logger.info("Loading plugin from ${file.absolutePath}")
                 val classLoader = URLClassLoader.newInstance(arrayOf(file.toURI().toURL()),
                                                              this.javaClass.classLoader)
                 result.add(classLoader)

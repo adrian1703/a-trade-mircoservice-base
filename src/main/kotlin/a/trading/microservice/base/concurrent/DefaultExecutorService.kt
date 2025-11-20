@@ -11,6 +11,11 @@ class DefaultExecutorService {
     init {
         executorServices[ExecutorContext.COMPUTE] = getComputeExecutor()
         executorServices[ExecutorContext.IO] = getIOExecutor()
+        executorServices[ExecutorContext.DEFAULT] = getDefaultExecutor()
+    }
+
+    private fun getDefaultExecutor(): ExecutorService {
+        return Executors.newVirtualThreadPerTaskExecutor()
     }
 
     fun getExecutorService(context: ExecutorContext): ExecutorService {

@@ -17,6 +17,7 @@ repositories {
 dependencies {
     implementation("org.springframework:spring-webflux:6.1.14")
     implementation("org.apache.avro:avro:1.11.4")
+    implementation("org.slf4j:slf4j-api:2.0.9")
 }
 
 sourceSets["main"].java.srcDirs("src/main/avro")

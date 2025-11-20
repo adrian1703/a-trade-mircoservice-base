@@ -14,6 +14,7 @@ class ExampleResourcePlugin(private val api: DummyRuntimeApi = DummyRuntimeApi()
     fun servePlugin(): RouterFunction<ServerResponse> {
         val restApiPluginTest = RestApiPluginTest()
         val plugin = restApiPluginTest.getPlugin()
-        return plugin.getRouter(api)
+        plugin.init(api)
+        return plugin.getRouter()
     }
 }
