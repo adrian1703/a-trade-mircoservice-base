@@ -18,6 +18,7 @@ echo -e "${CYAN}==> Building dependencies...${RESET}"
 
 echo -e "${CYAN}==> Building project...${RESET}"
 ./gradlew clean build &> /dev/null
+#./gradlew clean build
 
 echo -e "${CYAN}==> Building Docker image...${RESET}"
 docker build \

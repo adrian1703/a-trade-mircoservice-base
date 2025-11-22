@@ -5,5 +5,7 @@ import java.util.concurrent.ExecutorService;
 public interface RuntimeApi {
     KafkaConfigs getKafkaConfigs();
 
+    ExecutorService getExecutorService();
+
     ExecutorService getExecutorService(ExecutorContext context);
 }

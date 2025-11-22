@@ -1,16 +1,16 @@
 package componentTest.a.trading.microservice.base.plugin
 
-import a.trading.microservice.base.Application
+import a.trading.microservice.base.MainApplication
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.web.reactive.server.WebTestClient
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
-                classes = [Application::class])
+                classes = [MainApplication::class])
 
 class ApiMicroservicePluginLoaderTest(
-    @Autowired val webTestClient: WebTestClient
+    @Autowired val webTestClient: WebTestClient,
 ) {
 
     @Test

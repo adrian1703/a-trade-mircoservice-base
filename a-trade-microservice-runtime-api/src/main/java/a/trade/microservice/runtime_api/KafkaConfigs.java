@@ -68,4 +68,18 @@ public interface KafkaConfigs {
      * @return A mutable map containing the configuration for an Avro consumer.
      */
     Map<String, Object> getAvroConsumerConfig(String groupId);
+
+    /**
+     * Constructs and returns a configuration map for a Kafka AdminClient instance.
+     *
+     * <p>
+     * This method provides the essential settings required to initialize and connect a
+     * Kafka Admin client,
+     * such as the bootstrap server addresses and any additional configuration
+     * necessary for administrative operations.
+     * </p>
+     *
+     * @return a mutable map containing the configuration for a Kafka Admin client.
+     */
+    Map<String, Object> getAdminClientConfig();
 }

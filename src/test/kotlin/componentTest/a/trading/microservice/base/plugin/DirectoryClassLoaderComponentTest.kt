@@ -1,6 +1,6 @@
 package componentTest.a.trading.microservice.base.plugin
 
-import a.trading.microservice.base.Application
+import a.trading.microservice.base.MainApplication
 import a.trading.microservice.base.plugin.DirectoryClassLoader
 import a.trading.microservice.base.plugin.DirectoryClassLoaderConfig
 import org.junit.jupiter.api.Assertions.assertNotNull
@@ -8,9 +8,9 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 
-@SpringBootTest(classes = [Application::class])
+@SpringBootTest(classes = [MainApplication::class])
 class DirectoryClassLoaderComponentTest(
-    @Autowired val directoryClassLoader: DirectoryClassLoader
+    @Autowired val directoryClassLoader: DirectoryClassLoader,
 ) {
     @Autowired
     lateinit var classLoaderConfig: DirectoryClassLoaderConfig
