@@ -4,7 +4,9 @@ import a.trade.microservice.runtime_api.KafkaConfigs
 import org.apache.kafka.clients.admin.AdminClient
 import org.apache.kafka.clients.admin.NewTopic
 import org.apache.kafka.common.config.TopicConfig
+import org.apache.kafka.common.errors.TopicExistsException
 import org.springframework.stereotype.Component
+import java.util.concurrent.ExecutionException
 
 @Component
 class KafkaWrapper(val kafkaConfigs: KafkaConfigs) {
@@ -25,8 +27,15 @@ class KafkaWrapper(val kafkaConfigs: KafkaConfigs) {
                 ).configs(topicConfig)
             }
             val createTopics = adminClient.createTopics(configuredTopics)
-            createTopics.all().get()//ensure creation
+            try {
+                createTopics.all().get()//ensure creation
+            } catch (e: ExecutionException) {
+                if (e.cause is TopicExistsException) {
+                    // Topic already exists; safe to ignore or log
+                } else {
+                    throw e
+                }
+            }
         }
     }
-
 }
