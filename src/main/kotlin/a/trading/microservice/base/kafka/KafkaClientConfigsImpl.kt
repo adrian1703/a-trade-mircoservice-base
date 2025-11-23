@@ -28,6 +28,7 @@ class KafkaClientConfigsImpl : KafkaConfigs {
         result[ProducerConfig.BOOTSTRAP_SERVERS_CONFIG] = kafkaUrl
         result[ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG] = StringSerializer::class.java
         result[ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG] = StringSerializer::class.java
+        result[ProducerConfig.LINGER_MS_CONFIG] = 50
         return result
     }
 
@@ -37,6 +38,7 @@ class KafkaClientConfigsImpl : KafkaConfigs {
         result[ConsumerConfig.GROUP_ID_CONFIG] = groupId
         result[ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG] = StringDeserializer::class.java
         result[ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG] = StringDeserializer::class.java
+        result[ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG] = "false"
         return result
     }
 
@@ -45,6 +47,7 @@ class KafkaClientConfigsImpl : KafkaConfigs {
         result[ProducerConfig.BOOTSTRAP_SERVERS_CONFIG] = kafkaUrl
         result[ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG] = StringSerializer::class.java
         result[ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG] = KafkaAvroSerializer::class.java
+        result[ProducerConfig.LINGER_MS_CONFIG] = "50"
         result[KafkaAvroSerializerConfig.SCHEMA_REGISTRY_URL_CONFIG] = schemaRegistryUrl
         return result
     }
@@ -57,6 +60,7 @@ class KafkaClientConfigsImpl : KafkaConfigs {
         result[ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG] = KafkaAvroDeserializer::class.java
         result[KafkaAvroDeserializerConfig.SCHEMA_REGISTRY_URL_CONFIG] = schemaRegistryUrl
         result[KafkaAvroDeserializerConfig.SPECIFIC_AVRO_READER_CONFIG] = true
+        result[ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG] = "false"
         return result
     }
 
