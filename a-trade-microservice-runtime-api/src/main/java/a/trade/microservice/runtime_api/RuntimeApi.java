@@ -8,4 +8,6 @@ public interface RuntimeApi {
     ExecutorService getExecutorService();
 
     ExecutorService getExecutorService(ExecutorContext context);
+
+    MessageApi getMessageApi();
 }

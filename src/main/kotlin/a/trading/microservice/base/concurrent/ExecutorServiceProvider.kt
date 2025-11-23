@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component
 import java.util.concurrent.*
 
 @Component
-class DefaultExecutorService {
+class ExecutorServiceProvider {
     val executorServices: MutableMap<ExecutorContext, ExecutorService> = mutableMapOf()
 
     init {
