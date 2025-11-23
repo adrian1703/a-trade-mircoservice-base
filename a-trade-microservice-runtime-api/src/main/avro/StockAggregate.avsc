@@ -1,0 +1,36 @@
+{
+  "type": "record",
+  "name": "StockAggregate",
+  "namespace": "kafka_message",
+  "fields": [
+    {
+      "name": "ticker",
+      "type": "string"
+    },
+    {
+      "name": "window_start",
+      "type": "long",
+      "logicalType": "timestamp-millis"
+    },
+    {
+      "name": "open",
+      "type": "double"
+    },
+    {
+      "name": "high",
+      "type": "double"
+    },
+    {
+      "name": "low",
+      "type": "double"
+    },
+    {
+      "name": "close",
+      "type": "double"
+    },
+    {
+      "name": "volume",
+      "type": "long"
+    }
+  ]
+}

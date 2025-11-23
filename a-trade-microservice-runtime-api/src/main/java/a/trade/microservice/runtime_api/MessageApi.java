@@ -51,6 +51,11 @@ import java.util.Collection;
 public interface MessageApi {
 
     /**
+     * Tests client connections by creating producer, consumer and admin client.
+     */
+    void clientSmokeTest();
+
+    /**
      * Creates an {@link AdminClient} instance.
      * The AdminClient is NOT automatically closed after the block.
      *

@@ -2,6 +2,7 @@ package a.trading.microservice.base.kafka
 
 import a.trade.microservice.runtime_api.KafkaConfigs
 import a.trade.microservice.runtime_api.MessageApi
+import kafka_message.StockAggregate
 import org.apache.kafka.clients.admin.AdminClient
 import org.apache.kafka.clients.admin.NewTopic
 import org.apache.kafka.clients.consumer.Consumer
@@ -10,6 +11,7 @@ import org.apache.kafka.clients.producer.KafkaProducer
 import org.apache.kafka.clients.producer.Producer
 import org.apache.kafka.common.config.TopicConfig
 import org.apache.kafka.common.errors.TopicExistsException
+import org.apache.kafka.common.errors.UnknownTopicOrPartitionException
 import org.springframework.stereotype.Component
 import java.util.concurrent.ExecutionException
 
@@ -21,6 +23,14 @@ class KafkaWrapper(val kafkaConfigs: KafkaConfigs) : MessageApi {
         AdminClient.create(adminClientConfig).use { adminClient ->
             return block(adminClient)
         }
+    }
+
+    override fun clientSmokeTest() {
+        createAdminClient().close()
+        createStringProducer().close()
+        createAvroProducer<StockAggregate>().close()
+        createStringConsumer("smoke-test-consumer").close()
+        createAvroConsumer<StockAggregate>("smoke-test-consumer").close()
     }
 
     override fun createAdminClient(): AdminClient {
@@ -60,7 +70,11 @@ class KafkaWrapper(val kafkaConfigs: KafkaConfigs) : MessageApi {
 
     override fun deleteTopic(topics: Collection<String>) {
         withAdminClient { adminClient ->
-            adminClient.deleteTopics(topics).all().get()
+            try {
+                adminClient.deleteTopics(topics).all().get()
+            } catch (e: UnknownTopicOrPartitionException) {
+                // this is fine topic might not exist
+            }
         }
     }
 

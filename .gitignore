@@ -37,4 +37,3 @@ nb-configuration.xml
 
 # TLS Certificates
 .certs/
-/a-trade-microservice-runtime-api/src/main/avro/
