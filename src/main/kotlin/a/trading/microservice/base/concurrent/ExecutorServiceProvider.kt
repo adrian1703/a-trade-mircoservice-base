@@ -1,21 +1,19 @@
 package a.trading.microservice.base.concurrent
 
 import a.trade.microservice.runtime_api.ExecutorContext
+import org.slf4j.LoggerFactory.getLogger
 import org.springframework.stereotype.Component
 import java.util.concurrent.*
 
 @Component
 class ExecutorServiceProvider {
-    val executorServices: MutableMap<ExecutorContext, ExecutorService> = mutableMapOf()
+    val logger = getLogger(ExecutorServiceProvider::class.java)
+    val executorServices: MutableMap<ExecutorContext, ExecutorService> = ConcurrentHashMap()
 
     init {
         executorServices[ExecutorContext.COMPUTE] = getComputeExecutor()
         executorServices[ExecutorContext.IO] = getIOExecutor()
         executorServices[ExecutorContext.DEFAULT] = getDefaultExecutor()
-    }
-
-    private fun getDefaultExecutor(): ExecutorService {
-        return Executors.newVirtualThreadPerTaskExecutor()
     }
 
     fun getExecutorService(context: ExecutorContext): ExecutorService {
@@ -26,19 +24,45 @@ class ExecutorServiceProvider {
         return result
     }
 
+    private fun getDefaultExecutor(): ExecutorService {
+        return newExecutor(ExecutorContext.DEFAULT,
+                           1,
+                           Runtime.getRuntime().availableProcessors(),
+                           10,
+                           LinkedBlockingQueue(100))
+    }
+
     private fun getComputeExecutor(): ExecutorService {
-        val namedThreadFactory = createThreadFactoryFor(ExecutorContext.COMPUTE)
-        val threadPoolExecutor = ThreadPoolExecutor(1,
-                                                    Runtime.getRuntime().availableProcessors(),
-                                                    60,
-                                                    TimeUnit.SECONDS,
-                                                    LinkedBlockingQueue(),
-                                                    namedThreadFactory)
-        return threadPoolExecutor
+        return newExecutor(ExecutorContext.COMPUTE,
+                           3,
+                           Runtime.getRuntime().availableProcessors(),
+                           60,
+                           LinkedBlockingQueue())
     }
 
     private fun getIOExecutor(): ExecutorService {
         return Executors.newVirtualThreadPerTaskExecutor()
+    }
+
+    fun newExecutor(
+        context: ExecutorContext,
+        minThreadCount: Int,
+        maxThreadCount: Int,
+        keepAlive: Long,
+        workQueue: BlockingQueue<Runnable>,
+    ): ThreadPoolExecutor {
+        val namedThreadFactory = createThreadFactoryFor(context)
+        val result = ThreadPoolExecutor(minThreadCount,
+                                        maxThreadCount,
+                                        keepAlive,
+                                        TimeUnit.SECONDS,
+                                        workQueue,
+                                        namedThreadFactory,
+                                        ThreadPoolExecutor.AbortPolicy()
+        )
+        val threadsStarted = result.prestartAllCoreThreads()
+        logger.info("{}: Prestarted {} threads", context, threadsStarted)
+        return result
     }
 
     private fun createThreadFactoryFor(context: ExecutorContext): ThreadFactory {

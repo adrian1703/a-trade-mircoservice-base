@@ -59,7 +59,7 @@ class AsyncTaskManager(private val runtimeApi: RuntimeApi) : Lifecycle {
     }
 
     private var isRunning = false
-    private var taskFuture: Future<*>? = null
+    var taskFuture: Future<*>? = null
         @Synchronized get
     var task: Callable<*>? = null
         @Synchronized set

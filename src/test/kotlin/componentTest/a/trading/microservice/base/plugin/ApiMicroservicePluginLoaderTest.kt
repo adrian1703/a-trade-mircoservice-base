@@ -32,4 +32,15 @@ class ApiMicroservicePluginLoaderTest(
             .expectBody(String::class.java)
             .isEqualTo("hello")
     }
+
+    @Test
+    fun testHelloEndpoint4() {
+        val testComponent = TestComponent(23, "hi")
+        webTestClient.post().uri("/v1/test2")
+            .bodyValue(testComponent)
+            .exchange()
+            .expectStatus().isOk
+            .expectBody(String::class.java)
+            .isEqualTo("hello")
+    }
 }
