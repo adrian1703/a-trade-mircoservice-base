@@ -12,11 +12,14 @@ import org.apache.kafka.clients.producer.Producer
 import org.apache.kafka.common.config.TopicConfig
 import org.apache.kafka.common.errors.TopicExistsException
 import org.apache.kafka.common.errors.UnknownTopicOrPartitionException
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
 import java.util.concurrent.ExecutionException
 
 @Component
 class KafkaWrapper(val kafkaConfigs: KafkaConfigs) : MessageApi {
+
+    private val logger = LoggerFactory.getLogger(KafkaWrapper::class.java)
 
     fun <R> withAdminClient(block: (AdminClient) -> R): R {
         val adminClientConfig = kafkaConfigs.getAdminClientConfig()
@@ -26,14 +29,17 @@ class KafkaWrapper(val kafkaConfigs: KafkaConfigs) : MessageApi {
     }
 
     override fun clientSmokeTest() {
+        logger.info("Running client smoke test")
         createAdminClient().close()
         createStringProducer().close()
         createAvroProducer<StockAggregate>().close()
         createStringConsumer("smoke-test-consumer").close()
         createAvroConsumer<StockAggregate>("smoke-test-consumer").close()
+        logger.info("Smoke test completed")
     }
 
     override fun createAdminClient(): AdminClient {
+        logger.info("Creating AdminClient")
         return AdminClient.create(kafkaConfigs.getAdminClientConfig())
     }
 
@@ -47,6 +53,7 @@ class KafkaWrapper(val kafkaConfigs: KafkaConfigs) : MessageApi {
             TopicConfig.RETENTION_MS_CONFIG to "-1",
             TopicConfig.RETENTION_BYTES_CONFIG to "-1"
         )
+        logger.info("Creating topics: {} (partitions={}, replicationFactor={})", topics, partitions, replicationFactor)
         withAdminClient { adminClient ->
             val configuredTopics = topics.map { topic ->
                 NewTopic(
@@ -57,11 +64,13 @@ class KafkaWrapper(val kafkaConfigs: KafkaConfigs) : MessageApi {
             }
             val createTopics = adminClient.createTopics(configuredTopics)
             try {
-                createTopics.all().get()//ensure creation
+                createTopics.all().get() // ensure creation
+                logger.info("Topics created: {}", topics)
             } catch (e: ExecutionException) {
                 if (e.cause is TopicExistsException) {
-                    // Topic already exists; safe to ignore or log
+                    logger.warn("Attempted to create topics that already exist: {}", topics, e)
                 } else {
+                    logger.error("Error creating topics: {}", topics, e)
                     throw e
                 }
             }
@@ -69,28 +78,36 @@ class KafkaWrapper(val kafkaConfigs: KafkaConfigs) : MessageApi {
     }
 
     override fun deleteTopic(topics: Collection<String>) {
+        logger.info("Deleting topics: {}", topics)
         withAdminClient { adminClient ->
             try {
-                adminClient.deleteTopics(topics).all().get()
+                val existingTopics = adminClient.listTopics().names().get().intersect(topics)
+                logger.debug("Topics to delete after intersection: {}", existingTopics)
+                adminClient.deleteTopics(existingTopics).all().get()
+                logger.info("Deleted topics: {}", existingTopics)
             } catch (e: UnknownTopicOrPartitionException) {
-                // this is fine topic might not exist
+                logger.warn("Attempted to delete unknown topic or partition: {}", topics)
             }
         }
     }
 
     override fun createStringProducer(): Producer<String, String> {
+        logger.info("Creating string KafkaProducer")
         return KafkaProducer(kafkaConfigs.getStringProducerConfig())
     }
 
     override fun <T> createAvroProducer(): Producer<String, T> {
+        logger.info("Creating Avro KafkaProducer")
         return KafkaProducer(kafkaConfigs.getAvroProducerConfig())
     }
 
     override fun createStringConsumer(groupId: String): Consumer<String, String> {
+        logger.info("Creating string KafkaConsumer for group: {}", groupId)
         return KafkaConsumer(kafkaConfigs.getStringConsumerConfig(groupId))
     }
 
     override fun <T> createAvroConsumer(groupId: String): Consumer<String, T> {
+        logger.info("Creating Avro KafkaConsumer for group: {}", groupId)
         return KafkaConsumer(kafkaConfigs.getAvroConsumerConfig(groupId))
     }
 }

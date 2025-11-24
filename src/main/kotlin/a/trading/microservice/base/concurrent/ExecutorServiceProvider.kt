@@ -19,7 +19,7 @@ class ExecutorServiceProvider {
     }
 
     fun getExecutorService(context: ExecutorContext): ExecutorService {
-        val result = executorServices[ExecutorContext.COMPUTE]
+        val result = executorServices[context]
         if (result == null) {
             throw IllegalArgumentException("Executor context not found:${context}")
         }
@@ -28,12 +28,13 @@ class ExecutorServiceProvider {
 
     private fun getComputeExecutor(): ExecutorService {
         val namedThreadFactory = createThreadFactoryFor(ExecutorContext.COMPUTE)
-        return ThreadPoolExecutor(1,
-                                  Runtime.getRuntime().availableProcessors(),
-                                  60,
-                                  TimeUnit.SECONDS,
-                                  LinkedBlockingQueue(),
-                                  namedThreadFactory)
+        val threadPoolExecutor = ThreadPoolExecutor(1,
+                                                    Runtime.getRuntime().availableProcessors(),
+                                                    60,
+                                                    TimeUnit.SECONDS,
+                                                    LinkedBlockingQueue(),
+                                                    namedThreadFactory)
+        return threadPoolExecutor
     }
 
     private fun getIOExecutor(): ExecutorService {
