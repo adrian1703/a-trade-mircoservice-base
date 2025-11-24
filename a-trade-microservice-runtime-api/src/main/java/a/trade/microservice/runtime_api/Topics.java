@@ -4,7 +4,17 @@ public class Topics {
 
     private Topics() {}
 
-    public enum Instances {
+    /**
+     * <p>
+     * Represents predefined instances of various data aggregation and topic
+     * configurations.
+     * Each {@code Instance} defines specific combinations of {@link ContentType},
+     * {@link AggregateKind}, {@link TimeWindow}, and {@link TimeUnit}, intended to
+     * simplify
+     * topic generation and data handling logic.
+     * </p>
+     */
+    public enum Instance {
         STOCKAGGREGATE_ALL_1_MINUTE(ContentType.STOCKAGGREGATE, AggregateKind.ALL,
                 TimeWindow.ONE, TimeUnit.MINUTE);
 
@@ -13,8 +23,8 @@ public class Topics {
         private final TimeWindow    timeWindow;
         private final TimeUnit      timeUnit;
 
-        Instances(ContentType contentType, AggregateKind aggregateKind,
-                  TimeWindow timeWindow, TimeUnit timeUnit) {
+        Instance(ContentType contentType, AggregateKind aggregateKind,
+                 TimeWindow timeWindow, TimeUnit timeUnit) {
             this.contentType   = contentType;
             this.aggregateKind = aggregateKind;
             this.timeWindow    = timeWindow;
@@ -25,6 +35,8 @@ public class Topics {
          * Generates the topic name based on the instance's {@link ContentType},
          * {@link AggregateKind},
          * {@link TimeWindow}, and {@link TimeUnit}.
+         * If you need the base topic name for {@link AggregateKind#SINGLE} use
+         * {@link Instance#rootName}
          *
          * @return A {@link String} representing the constructed topic name.
          * @throws IllegalArgumentException If the {@link AggregateKind} is
@@ -35,6 +47,18 @@ public class Topics {
                 throw new IllegalArgumentException("aggregateKind cannot be SINGLE for "
                                                    + "topicName() use topicNameFor() " + "instead");
             }
+            return rootName();
+        }
+
+
+        /**
+         * Constructs a root name based on the instance's {@link ContentType},
+         * {@link AggregateKind}, {@link TimeWindow}, and {@link TimeUnit}.
+         *
+         * @return A {@link String} representing the root name of the aggregate based
+         * on the instance's properties.
+         */
+        public String rootName() {
             return contentType.value() + "_" + aggregateKind.value() + "_" + timeWindow.value() + "_" + timeUnit.value();
         }
 
@@ -58,7 +82,7 @@ public class Topics {
             if (aggregateKind == AggregateKind.ALL) {
                 throw new IllegalArgumentException("aggregateKind cannot be ALL for " + "topicNameFor");
             }
-            return contentType.value() + "_" + aggregateKind.value() + "_" + timeWindow.value() + "_" + timeUnit.value();
+            return rootName() + "_" + ticker.toLowerCase();
         }
     }
 
