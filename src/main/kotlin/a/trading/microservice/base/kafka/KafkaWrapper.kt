@@ -2,6 +2,7 @@ package a.trading.microservice.base.kafka
 
 import a.trade.microservice.runtime_api.KafkaConfigs
 import a.trade.microservice.runtime_api.MessageApi
+import a.trade.microservice.runtime_api.Topics.Instance.STOCKAGGREGATE_ALL_1_MINUTE
 import kafka_message.StockAggregate
 import org.apache.kafka.clients.admin.AdminClient
 import org.apache.kafka.clients.admin.NewTopic
@@ -89,6 +90,27 @@ class KafkaWrapper(val kafkaConfigs: KafkaConfigs) : MessageApi {
                 logger.warn("Attempted to delete unknown topic or partition: {}", topics)
             }
         }
+    }
+
+    override fun recreateTopic(topics: Collection<String>) {
+        fun prepareTopic(topicName: String) {
+            logger.info("Preparing topic: $topicName")
+            deleteTopic(listOf(STOCKAGGREGATE_ALL_1_MINUTE.topicName()))
+            createTopic(listOf(STOCKAGGREGATE_ALL_1_MINUTE.topicName()))
+            logger.info("Topic prepared: $topicName")
+        }
+        topics.forEach { topic -> prepareTopic(topic) }
+    }
+
+    override fun <T : Any?> lastRecordReached(consumer: Consumer<String, T>): Boolean {
+        val partitions = consumer.assignment()
+        return partitions.map { consumer.currentLag(it) }
+            .map {
+                if (it.isEmpty) return@map false // unknown
+                else if (it.asLong > 0) return@map false // end not reached
+                else return@map true // end reached
+            }
+            .reduce { acc, endReachedForPartition -> acc && endReachedForPartition }
     }
 
     override fun createStringProducer(): Producer<String, String> {

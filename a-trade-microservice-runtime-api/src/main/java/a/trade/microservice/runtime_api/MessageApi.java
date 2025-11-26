@@ -91,6 +91,26 @@ public interface MessageApi {
     void deleteTopic(Collection<String> topics);
 
     /**
+     * Recreates one or more Kafka topics by deleting and then recreating them with
+     * default
+     * configurations. This operation ensures the topics are reset to their initial state.
+     *
+     * @param topics A {@link Collection} of topic names to recreate.
+     */
+    void recreateTopic(Collection<String> topics);
+//    void recreateTopic(Collection<String> topics, int partitions, int
+//    replicationFactor);
+
+    /**
+     * Determines if the consumer has reached the last record in the topic partition it
+     * is subscribed to.
+     *
+     * @return {@code true} if the last record has been reached; {@code false} otherwise.
+     */
+    <T> boolean lastRecordReached(Consumer<String, T> consumer);
+
+
+    /**
      * Create a Kafka producer for String keys and values.
      *
      * @return Producer instance for String keys and values.
