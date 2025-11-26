@@ -16,7 +16,10 @@ public class Topics {
      */
     public enum Instance {
         STOCKAGGREGATE_ALL_1_MINUTE(ContentType.STOCKAGGREGATE, AggregateKind.ALL,
-                TimeWindow.ONE, TimeUnit.MINUTE);
+                TimeWindow.ONE, TimeUnit.MINUTE),
+        STOCKAGGREGATE_SINGLE_1_MINUTE(ContentType.STOCKAGGREGATE, AggregateKind.SINGLE
+                , TimeWindow.ONE, TimeUnit.MINUTE),
+        ;
 
         private final ContentType   contentType;
         private final AggregateKind aggregateKind;
