@@ -21,10 +21,10 @@ public class Topics {
                 , TimeWindow.ONE, TimeUnit.MINUTE),
         ;
 
-        private final ContentType   contentType;
-        private final AggregateKind aggregateKind;
-        private final TimeWindow    timeWindow;
-        private final TimeUnit      timeUnit;
+        public final ContentType   contentType;
+        public final AggregateKind aggregateKind;
+        public final TimeWindow    timeWindow;
+        public final TimeUnit      timeUnit;
 
         Instance(ContentType contentType, AggregateKind aggregateKind,
                  TimeWindow timeWindow, TimeUnit timeUnit) {
