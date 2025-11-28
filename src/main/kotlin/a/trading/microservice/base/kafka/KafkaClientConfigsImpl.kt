@@ -39,6 +39,7 @@ class KafkaClientConfigsImpl : KafkaConfigs {
         result[ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG] = StringDeserializer::class.java
         result[ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG] = StringDeserializer::class.java
         result[ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG] = "false"
+        result[ConsumerConfig.AUTO_OFFSET_RESET_CONFIG] = "earliest"
         return result
     }
 
@@ -61,6 +62,7 @@ class KafkaClientConfigsImpl : KafkaConfigs {
         result[KafkaAvroDeserializerConfig.SCHEMA_REGISTRY_URL_CONFIG] = schemaRegistryUrl
         result[KafkaAvroDeserializerConfig.SPECIFIC_AVRO_READER_CONFIG] = true
         result[ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG] = "false"
+        result[ConsumerConfig.AUTO_OFFSET_RESET_CONFIG] = "earliest"
         return result
     }
 

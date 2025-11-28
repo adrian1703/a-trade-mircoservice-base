@@ -7,13 +7,16 @@ import java.util.concurrent.*
 
 @Component
 class ExecutorServiceProvider {
-    val logger = getLogger(ExecutorServiceProvider::class.java)
+    val logger = getLogger(this::class.java)
     val executorServices: MutableMap<ExecutorContext, ExecutorService> = ConcurrentHashMap()
 
     init {
-        executorServices[ExecutorContext.COMPUTE] = getComputeExecutor()
-        executorServices[ExecutorContext.IO] = getIOExecutor()
-        executorServices[ExecutorContext.DEFAULT] = getDefaultExecutor()
+        // @formatter:off
+        executorServices[ExecutorContext.COMPUTE]   = LoggingExecutorService(getComputeExecutor())
+        executorServices[ExecutorContext.IO]        = LoggingExecutorService(getIOExecutor())
+        executorServices[ExecutorContext.DEFAULT]   = LoggingExecutorService(getUnboundedExecutor()) //LoggingExecutorService(getDefaultExecutor())
+        executorServices[ExecutorContext.UNBOUNDED] = LoggingExecutorService(getUnboundedExecutor())
+        // @formatter:on
     }
 
     fun getExecutorService(context: ExecutorContext): ExecutorService {
@@ -27,17 +30,28 @@ class ExecutorServiceProvider {
     private fun getDefaultExecutor(): ExecutorService {
         return newExecutor(ExecutorContext.DEFAULT,
                            1,
-                           Runtime.getRuntime().availableProcessors(),
                            10,
-                           LinkedBlockingQueue(100))
+                           10,
+                           LinkedBlockingQueue(100),
+                           ThreadPoolExecutor.AbortPolicy())
     }
 
     private fun getComputeExecutor(): ExecutorService {
         return newExecutor(ExecutorContext.COMPUTE,
-                           3,
                            Runtime.getRuntime().availableProcessors(),
-                           60,
-                           LinkedBlockingQueue())
+                           Runtime.getRuntime().availableProcessors(),
+                           20,
+                           LinkedBlockingQueue(),
+                           ThreadPoolExecutor.CallerRunsPolicy())
+    }
+
+    private fun getUnboundedExecutor(): ExecutorService {
+        return newExecutor(ExecutorContext.UNBOUNDED,
+                           1,
+                           Int.MAX_VALUE,
+                           5,
+                           SynchronousQueue(),
+                           ThreadPoolExecutor.AbortPolicy())
     }
 
     private fun getIOExecutor(): ExecutorService {
@@ -50,6 +64,7 @@ class ExecutorServiceProvider {
         maxThreadCount: Int,
         keepAlive: Long,
         workQueue: BlockingQueue<Runnable>,
+        policy: RejectedExecutionHandler,
     ): ThreadPoolExecutor {
         val namedThreadFactory = createThreadFactoryFor(context)
         val result = ThreadPoolExecutor(minThreadCount,
@@ -58,8 +73,7 @@ class ExecutorServiceProvider {
                                         TimeUnit.SECONDS,
                                         workQueue,
                                         namedThreadFactory,
-                                        ThreadPoolExecutor.AbortPolicy()
-        )
+                                        policy)
         val threadsStarted = result.prestartAllCoreThreads()
         logger.info("{}: Prestarted {} threads", context, threadsStarted)
         return result

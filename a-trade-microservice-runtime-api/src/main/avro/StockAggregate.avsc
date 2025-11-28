@@ -9,8 +9,7 @@
     },
     {
       "name": "window_start",
-      "type": "long",
-      "logicalType": "timestamp-millis"
+      "type": "long"
     },
     {
       "name": "open",

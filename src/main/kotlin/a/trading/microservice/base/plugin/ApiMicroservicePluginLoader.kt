@@ -45,6 +45,10 @@ class ApiMicroservicePluginLoader(val classLoader: DirectoryClassLoader, val run
         return plugins.toList()
     }
 
+    fun basisRouter(): RouterFunction<ServerResponse> = router {
+        GET("/ping") { ServerResponse.ok().build() }
+    }
+
     fun getRouter(): RouterFunction<ServerResponse> {
         val plugins = loadImplementations()
         logger.info("Loaded ${plugins.size} plugins")

@@ -2,7 +2,6 @@ package a.trading.microservice.base.kafka
 
 import a.trade.microservice.runtime_api.KafkaConfigs
 import a.trade.microservice.runtime_api.MessageApi
-import a.trade.microservice.runtime_api.Topics.Instance.STOCKAGGREGATE_ALL_1_MINUTE
 import kafka_message.StockAggregate
 import org.apache.kafka.clients.admin.AdminClient
 import org.apache.kafka.clients.admin.NewTopic
@@ -21,12 +20,13 @@ import java.util.concurrent.ExecutionException
 class KafkaWrapper(val kafkaConfigs: KafkaConfigs) : MessageApi {
 
     private val logger = LoggerFactory.getLogger(KafkaWrapper::class.java)
+    private var adminClient: AdminClient? = null
 
     fun <R> withAdminClient(block: (AdminClient) -> R): R {
-        val adminClientConfig = kafkaConfigs.getAdminClientConfig()
-        AdminClient.create(adminClientConfig).use { adminClient ->
-            return block(adminClient)
+        if (adminClient == null) {
+            adminClient = AdminClient.create(kafkaConfigs.getAdminClientConfig())
         }
+        return block(adminClient!!)
     }
 
     override fun clientSmokeTest() {
@@ -95,8 +95,8 @@ class KafkaWrapper(val kafkaConfigs: KafkaConfigs) : MessageApi {
     override fun recreateTopic(topics: Collection<String>) {
         fun prepareTopic(topicName: String) {
             logger.info("Preparing topic: $topicName")
-            deleteTopic(listOf(STOCKAGGREGATE_ALL_1_MINUTE.topicName()))
-            createTopic(listOf(STOCKAGGREGATE_ALL_1_MINUTE.topicName()))
+            deleteTopic(listOf(topicName))
+            createTopic(listOf(topicName))
             logger.info("Topic prepared: $topicName")
         }
         topics.forEach { topic -> prepareTopic(topic) }
@@ -104,6 +104,7 @@ class KafkaWrapper(val kafkaConfigs: KafkaConfigs) : MessageApi {
 
     override fun <T : Any?> lastRecordReached(consumer: Consumer<String, T>): Boolean {
         val partitions = consumer.assignment()
+        if (partitions.isEmpty()) return false // partitions may not be assigned yet
         return partitions.map { consumer.currentLag(it) }
             .map {
                 if (it.isEmpty) return@map false // unknown

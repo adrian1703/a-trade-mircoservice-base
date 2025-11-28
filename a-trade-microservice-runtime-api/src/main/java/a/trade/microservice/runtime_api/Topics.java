@@ -34,25 +34,6 @@ public class Topics {
             this.timeUnit      = timeUnit;
         }
 
-        /**
-         * Generates the topic name based on the instance's {@link ContentType},
-         * {@link AggregateKind},
-         * {@link TimeWindow}, and {@link TimeUnit}.
-         * If you need the base topic name for {@link AggregateKind#SINGLE} use
-         * {@link Instance#rootName}
-         *
-         * @return A {@link String} representing the constructed topic name.
-         * @throws IllegalArgumentException If the {@link AggregateKind} is
-         *                                  {@link AggregateKind#SINGLE}.
-         */
-        public String topicName() {
-            if (aggregateKind == AggregateKind.SINGLE) {
-                throw new IllegalArgumentException("aggregateKind cannot be SINGLE for "
-                                                   + "topicName() use topicNameFor() " + "instead");
-            }
-            return rootName();
-        }
-
 
         /**
          * Constructs a root name based on the instance's {@link ContentType},
@@ -79,13 +60,10 @@ public class Topics {
          *                                  {@link AggregateKind#ALL}.
          */
         public String topicNameFor(String ticker) {
-            if (ticker == null) {
-                throw new IllegalArgumentException("ticker cannot be null");
-            }
-            if (aggregateKind == AggregateKind.ALL) {
-                throw new IllegalArgumentException("aggregateKind cannot be ALL for " + "topicNameFor");
-            }
-            return rootName() + "_" + ticker.toLowerCase();
+            return switch (aggregateKind) {
+                case ALL -> rootName();
+                case SINGLE -> rootName() + "_" + ticker.toUpperCase();
+            };
         }
     }
 
