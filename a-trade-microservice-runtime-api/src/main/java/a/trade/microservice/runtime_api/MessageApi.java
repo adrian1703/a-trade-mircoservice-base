@@ -101,6 +101,14 @@ public interface MessageApi {
 //    void recreateTopic(Collection<String> topics, int partitions, int
 //    replicationFactor);
 
+
+    /**
+     * Deletes one or more Kafka consumer groups identified by their group IDs.
+     *
+     * @param groupIds A {@link Collection} of consumer group IDs to delete.
+     */
+    void deleteConsumerGroups(Collection<String> groupIds);
+
     /**
      * Determines if the consumer has reached the last record in the topic partition it
      * is subscribed to.

@@ -102,6 +102,17 @@ class KafkaWrapper(val kafkaConfigs: KafkaConfigs) : MessageApi {
         topics.forEach { topic -> prepareTopic(topic) }
     }
 
+    override fun deleteConsumerGroups(groupIds: Collection<String>) {
+        logger.info("Deleting consumer groups: {}", groupIds)
+        withAdminClient { adminClient ->
+            try {
+                adminClient.deleteConsumerGroups(groupIds).all().get()
+            } catch (e: Exception) {
+                logger.warn("Exception occured while deleting consumer groups: {}", e.message, e)
+            }
+        }
+    }
+
     override fun <T : Any?> lastRecordReached(consumer: Consumer<String, T>): Boolean {
         val partitions = consumer.assignment()
         if (partitions.isEmpty()) return false // partitions may not be assigned yet
