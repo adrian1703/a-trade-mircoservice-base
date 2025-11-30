@@ -37,3 +37,4 @@ nb-configuration.xml
 
 # TLS Certificates
 .certs/
+/src/test/resources/*.jar
