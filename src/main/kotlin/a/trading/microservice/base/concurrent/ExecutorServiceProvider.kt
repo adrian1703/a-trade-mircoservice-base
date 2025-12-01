@@ -14,8 +14,8 @@ class ExecutorServiceProvider {
         // @formatter:off
         executorServices[ExecutorContext.COMPUTE]   = LoggingExecutorService(getComputeExecutor())
         executorServices[ExecutorContext.IO]        = LoggingExecutorService(getIOExecutor())
-        executorServices[ExecutorContext.DEFAULT]   = LoggingExecutorService(getUnboundedExecutor()) //LoggingExecutorService(getDefaultExecutor())
-        executorServices[ExecutorContext.UNBOUNDED] = LoggingExecutorService(getUnboundedExecutor())
+        executorServices[ExecutorContext.DEFAULT]   = LoggingExecutorService(getIOExecutor()) //LoggingExecutorService(getUnboundedExecutor())
+        executorServices[ExecutorContext.UNBOUNDED] = LoggingExecutorService(getIOExecutor()) //LoggingExecutorService(getUnboundedExecutor())
         // @formatter:on
     }
 
@@ -47,7 +47,7 @@ class ExecutorServiceProvider {
 
     private fun getUnboundedExecutor(): ExecutorService {
         return newExecutor(ExecutorContext.UNBOUNDED,
-                           1,
+                           Int.MAX_VALUE,
                            Int.MAX_VALUE,
                            5,
                            SynchronousQueue(),

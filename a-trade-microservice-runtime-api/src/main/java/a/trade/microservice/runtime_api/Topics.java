@@ -21,6 +21,10 @@ public class Topics {
                 TimeWindowSize.ONE, TimeUnit.MINUTE),
         STOCKAGGREGATE_SINGLE_1_MINUTE(ContentType.STOCKAGGREGATE, AggregateKind.SINGLE
                 , TimeWindowSize.ONE, TimeUnit.MINUTE),
+        STOCKAGGREGATE_ALL_1_DAY(ContentType.STOCKAGGREGATE, AggregateKind.ALL,
+                TimeWindowSize.ONE, TimeUnit.DAY),
+        STOCKAGGREGATE_SINGLE_1_DAY(ContentType.STOCKAGGREGATE, AggregateKind.SINGLE,
+                TimeWindowSize.ONE, TimeUnit.DAY),
         ;
 
         public final ContentType    contentType;

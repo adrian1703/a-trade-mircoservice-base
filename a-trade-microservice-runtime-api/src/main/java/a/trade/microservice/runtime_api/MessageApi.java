@@ -135,7 +135,7 @@ public interface MessageApi {
 
     /**
      * Create a Kafka consumer for String keys and values.
-     * Consumers do not autocommit.
+     * Consumers do autocommit.
      *
      * @param groupId Kafka consumer group ID.
      * @return Consumer instance for String keys and values.
@@ -143,12 +143,33 @@ public interface MessageApi {
     Consumer<String, String> createStringConsumer(String groupId);
 
     /**
+     * Create a Kafka consumer for String keys and values.
+     *
+     * @param groupId        Kafka consumer group ID.
+     * @param autocommitMode sets the autocommit conf
+     * @return Consumer instance for String keys and values.
+     */
+    Consumer<String, String> createStringConsumer(String groupId, Boolean autocommitMode);
+
+
+    /**
      * Create a Kafka consumer for String keys and Avro-serialized values.
-     * Consumers do not autocommit.
+     * Consumers do autocommit.
      *
      * @param groupId Kafka consumer group ID.
      * @param <T>     Avro value type.
      * @return Consumer instance for String keys and Avro values.
      */
     <T> Consumer<String, T> createAvroConsumer(String groupId);
+
+    /**
+     * Create a Kafka consumer for String keys and Avro-serialized values.
+     *
+     * @param groupId        Kafka consumer group ID.
+     * @param autocommitMode sets the autocommit conf
+     * @param <T>            Avro value type.
+     * @return Consumer instance for String keys and Avro values.
+     */
+    <T> Consumer<String, T> createAvroConsumer(String groupId, Boolean autocommitMode);
+
 }

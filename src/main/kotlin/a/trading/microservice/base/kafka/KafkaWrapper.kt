@@ -6,6 +6,7 @@ import kafka_message.StockAggregate
 import org.apache.kafka.clients.admin.AdminClient
 import org.apache.kafka.clients.admin.NewTopic
 import org.apache.kafka.clients.consumer.Consumer
+import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.clients.consumer.KafkaConsumer
 import org.apache.kafka.clients.producer.KafkaProducer
 import org.apache.kafka.clients.producer.Producer
@@ -136,12 +137,24 @@ class KafkaWrapper(val kafkaConfigs: KafkaConfigs) : MessageApi {
     }
 
     override fun createStringConsumer(groupId: String): Consumer<String, String> {
+        return createStringConsumer(groupId, true)
+    }
+
+    override fun createStringConsumer(groupId: String, autocommitMode: Boolean): Consumer<String, String> {
         logger.info("Creating string KafkaConsumer for group: {}", groupId)
-        return KafkaConsumer(kafkaConfigs.getStringConsumerConfig(groupId))
+        val stringConsumerConfig = kafkaConfigs.getStringConsumerConfig(groupId)
+        stringConsumerConfig[ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG] = autocommitMode.toString()
+        return KafkaConsumer(stringConsumerConfig)
     }
 
     override fun <T> createAvroConsumer(groupId: String): Consumer<String, T> {
+        return createAvroConsumer(groupId, true)
+    }
+
+    override fun <T> createAvroConsumer(groupId: String, autocommitMode: Boolean): Consumer<String, T> {
         logger.info("Creating Avro KafkaConsumer for group: {}", groupId)
-        return KafkaConsumer(kafkaConfigs.getAvroConsumerConfig(groupId))
+        val consumerConfig = kafkaConfigs.getAvroConsumerConfig(groupId)
+        consumerConfig[ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG] = autocommitMode.toString()
+        return KafkaConsumer(consumerConfig)
     }
 }
